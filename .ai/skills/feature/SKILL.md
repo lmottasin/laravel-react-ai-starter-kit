@@ -1,6 +1,6 @@
 ---
 name: feature
-description: Build one feature end to end, agentically - clarify, explore, spec, build, verify in the browser, simplify, review, fix, archive, and open a pull request - stopping only for spec approval and commit/push confirmation.
+description: Build one feature end to end, agentically - clarify, explore, spec, build, verify in the browser, simplify, review, fix, archive, and open a pull request - stopping only for spec approval and commit, push and merge confirmation.
 argument-hint: "\"<phase item, e.g. Phase 2.1: create and complete tasks>\""
 disable-model-invocation: true
 ---
@@ -25,7 +25,8 @@ Run the whole pipeline yourself. You are the only agent that edits code; subagen
 10. **Archive.** Use the openspec-archive-change skill; tick the item in `docs/project-phases.md`.
 11. **Ship.** Commit with a clear message, push the branch, and open a pull request (the user confirms the commit and push). Put the proposal summary and the test result in the PR description. Wait for CI and report its result.
 12. **PR review.** Follow `${CLAUDE_SKILL_DIR}/../review-pr/SKILL.md` on the new pull request. Fix High findings, push again, re-check CI.
+13. **Merge.** When CI is green and no High findings remain, squash-merge the pull request and delete the branch (the user confirms the merge), then switch back to an up-to-date `main`.
 
 ## Report
 
-End with: what was built, the PR link, CI status, review findings fixed and left, screenshots folder, and anything the user must decide. Don't merge; suggest merging once the user is happy.
+End with: what was built, the PR link, CI status, review findings fixed and left, whether it was merged, the screenshots folder, and anything the user must decide.

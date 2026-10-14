@@ -8,11 +8,11 @@ Think of Claude as a fast, careful junior developer. This kit gives it a clear p
 
 You only need three commands. Claude handles everything in between and stops to ask you whenever a decision is needed.
 
-| Step      | You type                    | What happens                                                                                                                                                             | Your part                                               |
-| --------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------- |
-| 1. Set up | `/setup-project`            | Claude creates the databases, installs everything and checks that all tests pass.                                                                                        | Confirm the database names.                             |
-| 2. Plan   | `/kickoff`                  | Claude asks about your idea, then writes a project description, user stories, a database design and a step-by-step build plan.                                           | Read and approve each document.                         |
-| 3. Build  | `/feature "Phase 1.1: ..."` | Claude builds one piece of the plan: asks questions, writes a short spec, builds it with tests, checks it in a real browser, gets it reviewed, and opens a pull request. | Approve the spec, confirm the commit, merge when happy. |
+| Step      | You type                    | What happens                                                                                                                                                                       | Your part                                           |
+| --------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| 1. Set up | `/setup-project`            | Claude creates the databases, installs everything and checks that all tests pass.                                                                                                  | Confirm the database names.                         |
+| 2. Plan   | `/kickoff`                  | Claude asks about your idea, then writes a project description, user stories, a database design and a step-by-step build plan.                                                     | Read and approve each document.                     |
+| 3. Build  | `/feature "Phase 1.1: ..."` | Claude builds one piece of the plan: asks questions, writes a short spec, builds it with tests, checks it in a real browser, gets it reviewed, opens a pull request and merges it. | Approve the spec, confirm the commit and the merge. |
 
 Then you repeat step 3 for the next piece of the plan.
 
@@ -55,7 +55,7 @@ Claude can't skip the process. These are enforced, not just suggested:
 
 - **Nothing is built before you approve the plan** for it.
 - **Claude can't change code on the main branch.** Every change happens on its own branch and arrives as a pull request.
-- **Claude asks before every commit and push**, and **never merges**. You do.
+- **Claude asks before every commit, push and merge.** It only merges once the automatic checks pass and the review is clean.
 - **Every line of code must be covered by tests**, and the tests run automatically on GitHub for every pull request.
 - **Claude can't read your secrets** (the `.env` file) or wipe the database.
 - **Code is checked for mistakes and tidied automatically** every time Claude edits a file.

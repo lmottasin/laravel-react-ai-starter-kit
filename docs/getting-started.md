@@ -1,6 +1,6 @@
 # Getting started
 
-The workflow is strict and agentic: three commands, and Claude runs every step in between. Hooks and rules stop it from skipping steps. You only make decisions (approve each kickoff document, approve each spec, confirm commits and pushes, merge).
+The workflow is strict and agentic: three commands, and Claude runs every step in between. Hooks and rules stop it from skipping steps. You only make decisions (approve each kickoff document, approve each spec, confirm commits, pushes and merges).
 
 Example throughout: a **todo app** with task lists that can be shared as viewer or editor.
 
@@ -52,7 +52,7 @@ One command, and Claude runs the whole pipeline:
 | Ship      | Commit, push, pull request, waits for CI                                                                 | **Confirm commit and push**                                                                           |
 | PR review | Commander review of the PR, fixes High findings                                                          |                                                                                                       |
 
-You get a report with the PR link, CI status and any decisions left. **You merge.**
+Once CI is green and the review is clean, Claude merges the pull request (you confirm). You get a report with the PR link and any decisions left.
 
 The code follows the house rules automatically. For example:
 

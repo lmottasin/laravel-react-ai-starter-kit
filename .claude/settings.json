@@ -19,6 +19,7 @@
         "ask": [
             "Bash(git commit*)",
             "Bash(git push*)",
+            "Bash(gh pr merge*)",
             "Bash(composer require*)",
             "Bash(composer remove*)",
             "Bash(npm install*)",

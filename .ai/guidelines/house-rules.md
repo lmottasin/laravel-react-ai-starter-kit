@@ -33,4 +33,4 @@ These override general Laravel habits where they differ.
 - Never edit code on `main` (a hook blocks it). Docs and specs may change on `main`.
 - Never write code before the user approves the OpenSpec spec, and never skip a `/feature` stage. If a stage can't be done, stop and tell the user.
 - Only one agent edits code at a time; extra agents only read and review.
-- Never merge; the user merges.
+- Merge only after CI is green and the PR review has no High findings; the user confirms the merge.
