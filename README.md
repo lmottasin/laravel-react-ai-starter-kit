@@ -1,107 +1,106 @@
 # Laravel React AI Starter Kit
 
-Laravel 13 + Inertia React starter kit set up for AI-assisted development. AI agents follow your house rules, prove their work with tests, and a human stays in charge of every merge.
+A ready-made starting point for Laravel + React apps where an AI assistant (Claude) does most of the building, and you stay in charge.
 
-Built on Laravel's official [React starter kit](https://laravel.com/docs/starter-kits), with strict tooling from [Nuno Maduro's starter kit](https://github.com/nunomaduro/laravel-starter-kit-inertia-react) and an AI workflow for Claude Code, Codex and Cursor.
+Think of Claude as a fast, careful junior developer. This kit gives it a clear process to follow, a rulebook, and safety checks. You make the decisions; Claude does the legwork.
 
-## Quick start
+## How it works, in short
 
-Full flow with a todo app example: **[Getting started](docs/getting-started.md)**.
+You only need three commands. Claude handles everything in between and stops to ask you whenever a decision is needed.
 
-### Step 1: Create your project (pick one)
+| Step      | You type                    | What happens                                                                                                                                                             | Your part                                               |
+| --------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------- |
+| 1. Set up | `/setup-project`            | Claude creates the databases, installs everything and checks that all tests pass.                                                                                        | Confirm the database names.                             |
+| 2. Plan   | `/kickoff`                  | Claude asks about your idea, then writes a project description, user stories, a database design and a step-by-step build plan.                                           | Read and approve each document.                         |
+| 3. Build  | `/feature "Phase 1.1: ..."` | Claude builds one piece of the plan: asks questions, writes a short spec, builds it with tests, checks it in a real browser, gets it reviewed, and opens a pull request. | Approve the spec, confirm the commit, merge when happy. |
 
-**Option A, Laravel installer** (recommended):
+Then you repeat step 3 for the next piece of the plan.
 
-```bash
-laravel new my-app --using=https://github.com/lmottasin/laravel-react-ai-starter-kit --database=pgsql
-cd my-app
-```
+For a full example, see **[Getting started: building a todo app](docs/getting-started.md)**.
 
-**Option B, GitHub template**: click **Use this template** at the top of this page, then `git clone` your new repository and `cd` into it.
+## Getting started
 
-Both options give you the same project. Everything below is the same for both.
+**1. Create your project.** Pick one:
 
-### Step 2: Let Claude set it up
+- With the Laravel installer:
+    ```bash
+    laravel new my-app --using=https://github.com/lmottasin/laravel-react-ai-starter-kit --database=pgsql
+    ```
+- Or click **Use this template** at the top of this page and download your copy with `git clone`.
+
+**2. Open it in Claude Code:**
 
 ```bash
 cd my-app
 claude
 ```
 
-In Claude Code, run `/setup-project`. Claude creates the databases, checks pgvector, writes `.env`, installs everything and runs `composer test` until it's green.
+Say yes when Claude Code asks you to trust the project's settings.
 
-### Step 3: Plan and build
+**3. Type `/setup-project`** and follow along.
 
-Run `/kickoff` once to plan the app, then `/feature "Phase 1.1: ..."` for each feature (see [The AI workflow](#the-ai-workflow) and the [todo app walkthrough](docs/getting-started.md)).
+That's it. Then `/kickoff` to plan, and `/feature` to build.
 
-### Requirements
+### What your computer needs
 
-- PHP 8.5 with `pdo_pgsql` and `pcov` (coverage)
-- PostgreSQL 17 with the pgvector extension
-- Node 24 (LTS) and npm
-- [Playwright CLI](https://github.com/microsoft/playwright-cli) (`npm i -g @playwright/cli`) and [OpenSpec](https://github.com/Fission-AI/OpenSpec) (`npm i -g @fission-ai/openspec`)
+- **PHP 8.5** (with the PostgreSQL and code-coverage extensions)
+- **PostgreSQL 17** with **pgvector** (an add-on for AI search; [how to check you have it](docs/postgresql-pgvector.md))
+- **Node 24**
+- **Playwright CLI** (lets Claude use a browser): `npm i -g @playwright/cli`
+- **OpenSpec** (keeps the specs): `npm i -g @fission-ai/openspec`
 
-## What's included
+## Built-in safety rules
 
-| Area             | What you get                                                                                                                           |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Stack            | Laravel 13, Inertia 3, React 19, TypeScript, Tailwind 4, shadcn/ui, Fortify (2FA, passkeys), Wayfinder                                 |
-| Frontend tooling | Vite+ (`vp dev`, `vp build`, `vp check` for lint and format)                                                                           |
-| Database         | PostgreSQL + pgvector (enabled by a migration), tests run on PostgreSQL                                                                |
-| Strictness       | nunomaduro/essentials, Pint, Rector, PHPStan at max level, architecture tests                                                          |
-| Tests            | Pest with exactly 100% code coverage and 100% type coverage, plus browser (end-to-end) tests                                           |
-| Packages         | spatie/laravel-permission, spatie/laravel-activitylog, Laravel AI SDK, Laravel MCP                                                     |
-| Base controller  | `$this->authorize()` and an `ApiResponse` trait (`success`, `created`, `noContent`, `error`); framework errors use the same JSON shape |
-| AI knowledge     | Laravel Boost (guidelines, skills, MCP), house rules in `.ai/guidelines`, Context7 recommended                                         |
-| AI workflow      | Skills and agents listed below, OpenSpec for specs                                                                                     |
-| Safety           | Claude Code permissions (no `.env` reads, no database wipes, asks before commit and push), auto-format and fast-check hooks            |
-| CI               | GitHub Actions with PostgreSQL + pgvector and Playwright, Dependabot                                                                   |
+Claude can't skip the process. These are enforced, not just suggested:
 
-One command checks everything:
+- **Nothing is built before you approve the plan** for it.
+- **Claude can't change code on the main branch.** Every change happens on its own branch and arrives as a pull request.
+- **Claude asks before every commit and push**, and **never merges**. You do.
+- **Every line of code must be covered by tests**, and the tests run automatically on GitHub for every pull request.
+- **Claude can't read your secrets** (the `.env` file) or wipe the database.
+- **Code is checked for mistakes and tidied automatically** every time Claude edits a file.
 
-```bash
-composer test   # Pint, Rector, vp check, PHPStan, tsc, type coverage, tests at 100% coverage
-```
+## Other helpful commands
 
-## The AI workflow
+| Type             | When to use it                                                                                         |
+| ---------------- | ------------------------------------------------------------------------------------------------------ |
+| `/audit all`     | A health check of the whole app. Good at the end of each phase and before a release.                   |
+| `/review-pr 12`  | A thorough review of pull request #12, by several reviewers who each check one thing.                  |
+| `/worktree name` | Work on two unrelated features at the same time.                                                       |
+| `/ralph name`    | Autopilot: Claude works through a long, approved task list on its own. Only once your tests are solid. |
 
-Strict and agentic: three commands, and Claude runs every step in between. You only approve and decide.
+For anything else, such as starting the app or updating a package, just ask Claude in plain words.
 
-| Command                     | When                 | What Claude does                                                                                                                                                     | You                                              |
-| --------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| `/setup-project`            | Once, after creating | Databases, `.env`, install, migrations, test browser, green `composer test`                                                                                          | Confirm database names                           |
-| `/kickoff`                  | Once per project     | Description, user stories, packages, DB schema (DBML), phases with tests, in `docs/`                                                                                 | Approve each document                            |
-| `/feature "Phase 2.1: ..."` | Every feature        | Branch, clarify, explore, OpenSpec spec, build, browser check per role, simplify, parallel reviews with fixes, `composer test`, archive, commit, push, PR, PR review | Approve the spec, confirm commit and push, merge |
+## What's inside
 
-Small fixes (one file): describe them; Claude uses a fix branch and writes a test first, no spec needed. Anything else (start the app, run tests, update packages): just ask Claude.
+<details>
+<summary>The technical details</summary>
 
-**Other tools:** `/ralph <change>` autopilot over long task lists (only once tests are solid), `/worktree <slug>` for a parallel `/feature`, `/audit <area|all>` health checks, `/review-pr <number>`, `tech-debt` agent.
+| Area                     | What you get                                                                                  |
+| ------------------------ | --------------------------------------------------------------------------------------------- |
+| App                      | Laravel 13, React 19 with Inertia, TypeScript, Tailwind, shadcn/ui components                 |
+| Accounts                 | Login, registration, password reset, two-factor login and passkeys, ready to use              |
+| Database                 | PostgreSQL with pgvector for AI search                                                        |
+| Roles and history        | spatie/laravel-permission (who can do what) and spatie/laravel-activitylog (who changed what) |
+| AI features for your app | Laravel AI SDK and Laravel MCP                                                                |
+| Code quality             | Strict checks (Pint, Rector, PHPStan at the highest level), 100% test coverage, browser tests |
+| Teaching Claude          | Laravel Boost (Laravel knowledge for AI), house rules in `.ai/guidelines`, OpenSpec for specs |
+| Automation               | GitHub Actions runs every check on each pull request; Dependabot keeps packages up to date    |
 
-Only one agent edits code at a time; extra agents read and review.
+All checks can be run at once with `composer test`.
 
-## How the workflow is enforced
+</details>
 
-| Rule                                                           | Enforced by                                                                  |
-| -------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| Every change goes through `/feature`, or the one-file fix path | House rules Claude always loads                                              |
-| No code edits on `main`                                        | A hook blocks Claude from editing code until it's on a feature or fix branch |
-| No code before the spec is approved                            | `/feature` stops at the spec gate                                            |
-| Formatting and static analysis clean before Claude finishes    | A hook runs Pint and PHPStan when Claude stops                               |
-| Full test suite with exactly 100% coverage                     | `composer test` in `/feature` and in CI                                      |
-| No reading `.env`, no database wipes                           | Deny rules in `.claude/settings.json`                                        |
-| You confirm every commit and push; you merge                   | Ask rules in `.claude/settings.json`; Claude never merges                    |
+## Making it your own
 
-## Customising
+Ask Claude to change things in plain words, for example: _"Add a house rule: prices are always stored in cents."_ The rules live in `.ai/guidelines/house-rules.md`.
 
-- House rules: `.ai/guidelines/house-rules.md`, then `php artisan boost:update`.
-- Your own skills: `.ai/skills/<name>/SKILL.md`, then `php artisan boost:update`.
-- OpenSpec rules: `openspec/config.yaml`.
-- Read any third-party skill before installing it.
+If you add a skill made by someone else, read it first: skills are instructions Claude will follow.
 
-## Known workaround
+## Known issue
 
-`routes/settings.php` uses a GET route instead of `Route::redirect()` because of [laravel/wayfinder#326](https://github.com/laravel/wayfinder/issues/326). Revert once that's fixed.
+One settings route uses a small workaround because of a bug in a Laravel package ([laravel/wayfinder#326](https://github.com/laravel/wayfinder/issues/326)). It can be removed once the bug is fixed.
 
 ## License
 
-MIT. Includes the Playwright CLI skill from [microsoft/playwright-cli](https://github.com/microsoft/playwright-cli) (Apache-2.0) in `.ai/skills/playwright-cli`, and skills generated by Laravel Boost and spatie/laravel-permission (MIT).
+MIT. Includes the Playwright CLI skill from [microsoft/playwright-cli](https://github.com/microsoft/playwright-cli) (Apache-2.0), and skills generated by Laravel Boost and spatie/laravel-permission (MIT).
