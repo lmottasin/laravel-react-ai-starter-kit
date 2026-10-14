@@ -13,6 +13,9 @@ updates:
 
   - package-ecosystem: "composer"
     directory: "/"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     schedule:
       interval: "weekly"
     cooldown:
@@ -23,6 +26,9 @@ updates:
 
   - package-ecosystem: "npm"
     directory: "/"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     schedule:
       interval: "weekly"
     cooldown:

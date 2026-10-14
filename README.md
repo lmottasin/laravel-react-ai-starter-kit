@@ -29,19 +29,19 @@ Or click **Use this template** on GitHub and run `composer setup`.
 
 ## What's included
 
-| Area | What you get |
-|---|---|
-| Stack | Laravel 13, Inertia 3, React 19, TypeScript, Tailwind 4, shadcn/ui, Fortify (2FA, passkeys), Wayfinder |
-| Frontend tooling | Vite+ (`vp dev`, `vp build`, `vp check` for lint and format) |
-| Database | PostgreSQL + pgvector (enabled by a migration), tests run on PostgreSQL |
-| Strictness | nunomaduro/essentials, Pint, Rector, PHPStan at max level, architecture tests |
-| Tests | Pest with exactly 100% code coverage and 100% type coverage, plus browser (end-to-end) tests |
-| Packages | spatie/laravel-permission, spatie/laravel-activitylog, Laravel AI SDK, Laravel MCP |
-| Base controller | `$this->authorize()` and an `ApiResponse` trait (`success`, `created`, `noContent`, `error`); framework errors use the same JSON shape |
-| AI knowledge | Laravel Boost (guidelines, skills, MCP), house rules in `.ai/guidelines`, Context7 recommended |
-| AI workflow | Skills and agents listed below, OpenSpec for specs |
-| Safety | Claude Code permissions (no `.env` reads, no database wipes, no pushes), auto-format and fast-check hooks |
-| CI | GitHub Actions with PostgreSQL + pgvector and Playwright, Dependabot |
+| Area             | What you get                                                                                                                           |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Stack            | Laravel 13, Inertia 3, React 19, TypeScript, Tailwind 4, shadcn/ui, Fortify (2FA, passkeys), Wayfinder                                 |
+| Frontend tooling | Vite+ (`vp dev`, `vp build`, `vp check` for lint and format)                                                                           |
+| Database         | PostgreSQL + pgvector (enabled by a migration), tests run on PostgreSQL                                                                |
+| Strictness       | nunomaduro/essentials, Pint, Rector, PHPStan at max level, architecture tests                                                          |
+| Tests            | Pest with exactly 100% code coverage and 100% type coverage, plus browser (end-to-end) tests                                           |
+| Packages         | spatie/laravel-permission, spatie/laravel-activitylog, Laravel AI SDK, Laravel MCP                                                     |
+| Base controller  | `$this->authorize()` and an `ApiResponse` trait (`success`, `created`, `noContent`, `error`); framework errors use the same JSON shape |
+| AI knowledge     | Laravel Boost (guidelines, skills, MCP), house rules in `.ai/guidelines`, Context7 recommended                                         |
+| AI workflow      | Skills and agents listed below, OpenSpec for specs                                                                                     |
+| Safety           | Claude Code permissions (no `.env` reads, no database wipes, no pushes), auto-format and fast-check hooks                              |
+| CI               | GitHub Actions with PostgreSQL + pgvector and Playwright, Dependabot                                                                   |
 
 One command checks everything:
 
@@ -53,13 +53,13 @@ composer test   # Pint, Rector, vp check, PHPStan, tsc, type coverage, tests at 
 
 **Once per project (kickoff):**
 
-| Command | Produces |
-|---|---|
-| `/project-describe` | `docs/project-description.md` |
-| `/user-stories` | `docs/user-stories.md` (asks clarifying questions first) |
-| `/choose-packages` | A vetted package shortlist |
-| `/db-schema` | `docs/database-schema.md` (DBML) |
-| `/project-phases` | `docs/project-phases.md` with the tests per task |
+| Command             | Produces                                                 |
+| ------------------- | -------------------------------------------------------- |
+| `/project-describe` | `docs/project-description.md`                            |
+| `/user-stories`     | `docs/user-stories.md` (asks clarifying questions first) |
+| `/choose-packages`  | A vetted package shortlist                               |
+| `/db-schema`        | `docs/database-schema.md` (DBML)                         |
+| `/project-phases`   | `docs/project-phases.md` with the tests per task         |
 
 **For every feature:**
 
