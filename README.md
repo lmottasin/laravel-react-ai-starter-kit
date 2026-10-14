@@ -102,7 +102,7 @@ pgvector is a PostgreSQL extension that stores AI embeddings and finds similar i
 | Base controller  | `$this->authorize()` and an `ApiResponse` trait (`success`, `created`, `noContent`, `error`); framework errors use the same JSON shape |
 | AI knowledge     | Laravel Boost (guidelines, skills, MCP), house rules in `.ai/guidelines`, Context7 recommended                                         |
 | AI workflow      | Skills and agents listed below, OpenSpec for specs                                                                                     |
-| Safety           | Claude Code permissions (no `.env` reads, no database wipes, no pushes), auto-format and fast-check hooks                              |
+| Safety           | Claude Code permissions (no `.env` reads, no database wipes), auto-format and fast-check hooks                                         |
 | CI               | GitHub Actions with PostgreSQL + pgvector and Playwright, Dependabot                                                                   |
 
 One command checks everything:
