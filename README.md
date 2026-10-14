@@ -13,7 +13,7 @@ cd my-app
 
 Then:
 
-1. Create the databases (with pgvector available): `my_app` and `testing` (tests use `testing`, see `phpunit.xml`).
+1. Create two empty databases: `my_app` (the app) and `testing` (tests, see `phpunit.xml`). pgvector must be installed on your PostgreSQL server; the migrations enable it (see [PostgreSQL and pgvector](#postgresql-and-pgvector)).
 2. Check `.env` (`DB_*` settings), then `php artisan migrate`.
 3. `composer test` should pass.
 4. Open the project in Claude Code and start with `/project-describe`.
@@ -26,6 +26,27 @@ Or click **Use this template** on GitHub and run `composer setup`.
 - PostgreSQL 17 with the pgvector extension
 - Node 22 and npm
 - [Playwright CLI](https://github.com/microsoft/playwright-cli) (`npm i -g @playwright/cli`) and [OpenSpec](https://github.com/Fission-AI/OpenSpec) (`npm i -g @fission-ai/openspec`)
+
+## PostgreSQL and pgvector
+
+pgvector is a PostgreSQL extension that stores AI embeddings and finds similar items. It needs two things:
+
+1. **Installed on your PostgreSQL server** (once per machine). Check by running this in any database:
+
+    ```sql
+    SELECT name, default_version FROM pg_available_extensions WHERE name = 'vector';
+    ```
+
+    One row means it's installed. No rows means install it:
+
+    | How you run PostgreSQL | Install pgvector                                 |
+    | ---------------------- | ------------------------------------------------ |
+    | DBngin or Postgres.app | Already included                                 |
+    | Homebrew               | `brew install pgvector`, then restart PostgreSQL |
+    | Docker                 | Use the `pgvector/pgvector:pg17` image           |
+    | Ubuntu or Debian       | `sudo apt install postgresql-17-pgvector`        |
+
+2. **Enabled in each database.** You don't do this by hand: the first migration runs `Schema::ensureVectorExtensionExists()` (`CREATE EXTENSION IF NOT EXISTS vector`). Tests run the same migrations on the test database, so it's enabled there too. The database user needs permission to create extensions; the default `postgres` user has it.
 
 ## What's included
 
