@@ -1,0 +1,32 @@
+schema: spec-driven
+
+# Project context: only constraints an agent cannot infer by reading the code.
+context: |
+  This is a Laravel 13 + Inertia React app on PostgreSQL with pgvector.
+  The roadmap lives in docs/ (project-description, user-stories, database-schema, project-phases).
+  Each change implements one item from docs/project-phases.md and names it (e.g. "Phase 3.2").
+  House rules in .ai/guidelines/house-rules.md always apply (Actions, $this->authorize() in controllers,
+  API Resources for every response, ApiResponse trait for JSON, Enums for roles/statuses).
+  composer test must pass: exactly 100% code coverage and 100% type coverage.
+
+rules:
+  proposal:
+    - State which phase item from docs/project-phases.md this change implements.
+    - Include a "Don't touch" section listing files, features and behaviour that must not change.
+    - Keep proposals short and state what is out of scope.
+  specs:
+    - Write acceptance criteria as testable statements (one behaviour each).
+    - For every endpoint include a criterion for a user without permission receiving 403.
+  tasks:
+    - Each task names the Pest tests it needs (feature, and browser for user-facing flows).
+    - Include a final task to verify the feature with Playwright CLI as each relevant role, with screenshots.
+    - Include a security note task when the change touches auth, permissions, payments, uploads or MCP tools.
+
+operations:
+  apply:
+    guidance:
+      - Run only the tests related to the task while working; run composer test before finishing.
+      - Stop and ask when a decision is not answered by the proposal or specs.
+  archive:
+    guidance:
+      - Tick the matching item in docs/project-phases.md when archiving.

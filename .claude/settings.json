@@ -1,0 +1,72 @@
+{
+    "$schema": "https://json.schemastore.org/claude-code-settings.json",
+    "permissions": {
+        "allow": [
+            "Bash(php artisan *)",
+            "Bash(composer test*)",
+            "Bash(composer lint*)",
+            "Bash(vendor/bin/pint*)",
+            "Bash(vendor/bin/phpstan*)",
+            "Bash(vendor/bin/pest*)",
+            "Bash(vendor/bin/rector*)",
+            "Bash(npm run *)",
+            "Bash(npx vp *)",
+            "Bash(playwright-cli *)",
+            "Bash(git status*)",
+            "Bash(git diff*)",
+            "Bash(git log*)"
+        ],
+        "ask": [
+            "Bash(git commit*)",
+            "Bash(composer require*)",
+            "Bash(composer remove*)",
+            "Bash(npm install*)",
+            "Bash(npm i *)"
+        ],
+        "deny": [
+            "Read(./.env)",
+            "Read(./.env.*)",
+            "Bash(cat .env*)",
+            "Bash(php artisan migrate:fresh*)",
+            "Bash(php artisan migrate:reset*)",
+            "Bash(php artisan db:wipe*)",
+            "Bash(git push*)",
+            "Bash(rm -rf*)"
+        ]
+    },
+    "hooks": {
+        "PostToolUse": [
+            {
+                "matcher": "Edit|Write|MultiEdit",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pint-on-edit.sh"
+                    }
+                ]
+            }
+        ],
+        "Stop": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/fast-checks.sh",
+                        "timeout": 300
+                    }
+                ]
+            }
+        ]
+    },
+    "extraKnownMarketplaces": {
+        "laravel": {
+            "source": {
+                "source": "github",
+                "repo": "laravel/agent-skills"
+            }
+        }
+    },
+    "enabledPlugins": {
+        "laravel@laravel": true
+    }
+}
