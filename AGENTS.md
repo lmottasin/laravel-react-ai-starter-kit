@@ -35,11 +35,13 @@ These override general Laravel habits where they differ.
 - Laravel ecosystem: use Boost `search-docs` first. Other libraries: use Context7.
 - No comments or docblocks that restate the code; only explain why.
 
-## Workflow
+## Workflow (strict)
 
-- Agentic: `/setup-project` once, `/kickoff` once per project, then `/feature "<phase item>"` per feature. These run every step themselves and stop only for spec approval and commit/push confirmation.
-- One-file fixes skip the spec: fix test-first, run `composer test`, then commit and open a PR.
+- Every change goes through `/feature "<phase item>"`. The only exception is a one-file fix: create a `fix/<slug>` branch, write a failing test first, fix, run `composer test`, then commit and open a PR.
+- Never edit code on `main` (a hook blocks it). Docs and specs may change on `main`.
+- Never write code before the user approves the OpenSpec spec, and never skip a `/feature` stage. If a stage can't be done, stop and tell the user.
 - Only one agent edits code at a time; extra agents only read and review.
+- Never merge; the user merges.
 
 === foundation rules ===
 

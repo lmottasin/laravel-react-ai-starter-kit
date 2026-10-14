@@ -1,6 +1,6 @@
 # Getting started
 
-The workflow is agentic: three commands, and Claude runs every step in between. You only make decisions (approve each kickoff document, approve each spec, confirm commits and pushes, merge).
+The workflow is strict and agentic: three commands, and Claude runs every step in between. Hooks and rules stop it from skipping steps. You only make decisions (approve each kickoff document, approve each spec, confirm commits and pushes, merge).
 
 Example throughout: a **todo app** with task lists that can be shared as viewer or editor.
 
@@ -17,11 +17,7 @@ cd todo-app && claude
 
 Claude creates the databases (`todo_app`, `testing`), checks pgvector ([details](postgresql-pgvector.md)), writes `.env`, runs `composer setup`, installs the test browser and runs `composer test` until it's green. You confirm the database names.
 
-Optional, once per machine (holds your API key, so run it yourself):
-
-```bash
-claude mcp add --scope local context7 -- npx -y @upstash/context7-mcp --api-key YOUR_KEY
-```
+Optional: ask Claude to add Context7 (up-to-date library docs) with your API key, at local scope so the key never enters git.
 
 ## 3. `/kickoff`
 
@@ -75,7 +71,7 @@ Then the next item: `/feature "Phase 2.2: share a list"`.
 
 ## Small fixes
 
-No spec needed. Just ask:
+One-file fixes skip the spec. Claude still works on a `fix/` branch (editing code on `main` is blocked) and writes a failing test first. Just ask:
 
 > The due date shows in US format. Show it as 14 Oct 2026, test first, then commit and open a PR.
 
@@ -88,5 +84,3 @@ No spec needed. Just ask:
 | `/audit all`               | Health check at the end of each phase and before release.                                         |
 | `/review-pr <number>`      | Review any pull request, including ones written by people.                                        |
 | "Run the tech-debt agent." | Debt report per milestone.                                                                        |
-
-The individual steps (`/grill-me`, `/explore-modules`, `/opsx:propose`, `/opsx:apply`, `/verify-feature`, `/opsx:archive`) still work on their own when you want manual control.

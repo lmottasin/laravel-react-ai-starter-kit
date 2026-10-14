@@ -34,19 +34,6 @@ In Claude Code, run `/setup-project`. Claude creates the databases, checks pgvec
 
 Run `/kickoff` once to plan the app, then `/feature "Phase 1.1: ..."` for each feature (see [The AI workflow](#the-ai-workflow) and the [todo app walkthrough](docs/getting-started.md)).
 
-<details>
-<summary>Manual setup without Claude</summary>
-
-```bash
-# create two empty PostgreSQL databases: my_app and testing (pgvector must be installed, see docs/postgresql-pgvector.md)
-cp -n .env.example .env   # set DB_DATABASE=my_app and credentials
-composer setup
-npx playwright install chromium
-composer test             # ends with Total: 100.0 %
-```
-
-</details>
-
 ### Requirements
 
 - PHP 8.5 with `pdo_pgsql` and `pcov` (coverage)
@@ -78,7 +65,7 @@ composer test   # Pint, Rector, vp check, PHPStan, tsc, type coverage, tests at 
 
 ## The AI workflow
 
-Agentic: three commands, and Claude runs every step in between. You only approve and decide.
+Strict and agentic: three commands, and Claude runs every step in between. You only approve and decide.
 
 | Command                     | When                 | What Claude does                                                                                                                                                     | You                                              |
 | --------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
@@ -86,11 +73,23 @@ Agentic: three commands, and Claude runs every step in between. You only approve
 | `/kickoff`                  | Once per project     | Description, user stories, packages, DB schema (DBML), phases with tests, in `docs/`                                                                                 | Approve each document                            |
 | `/feature "Phase 2.1: ..."` | Every feature        | Branch, clarify, explore, OpenSpec spec, build, browser check per role, simplify, parallel reviews with fixes, `composer test`, archive, commit, push, PR, PR review | Approve the spec, confirm commit and push, merge |
 
-Small fixes: just describe them; no spec needed.
+Small fixes (one file): describe them; Claude uses a fix branch and writes a test first, no spec needed. Anything else (start the app, run tests, update packages): just ask Claude.
 
-**Other tools:** `/ralph <change>` autopilot over long task lists (only once tests are solid), `/worktree <slug>` for a parallel `/feature`, `/audit <area|all>` health checks, `/review-pr <number>`, `tech-debt` agent. The individual steps (`/grill-me`, `/explore-modules`, `/opsx:propose`, `/opsx:apply`, `/verify-feature`, `/opsx:archive`) still work on their own.
+**Other tools:** `/ralph <change>` autopilot over long task lists (only once tests are solid), `/worktree <slug>` for a parallel `/feature`, `/audit <area|all>` health checks, `/review-pr <number>`, `tech-debt` agent.
 
 Only one agent edits code at a time; extra agents read and review.
+
+## How the workflow is enforced
+
+| Rule                                                           | Enforced by                                                                  |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Every change goes through `/feature`, or the one-file fix path | House rules Claude always loads                                              |
+| No code edits on `main`                                        | A hook blocks Claude from editing code until it's on a feature or fix branch |
+| No code before the spec is approved                            | `/feature` stops at the spec gate                                            |
+| Formatting and static analysis clean before Claude finishes    | A hook runs Pint and PHPStan when Claude stops                               |
+| Full test suite with exactly 100% coverage                     | `composer test` in `/feature` and in CI                                      |
+| No reading `.env`, no database wipes                           | Deny rules in `.claude/settings.json`                                        |
+| You confirm every commit and push; you merge                   | Ask rules in `.claude/settings.json`; Claude never merges                    |
 
 ## Customising
 
