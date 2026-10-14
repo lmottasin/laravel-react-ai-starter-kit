@@ -6,6 +6,8 @@ Built on Laravel's official [React starter kit](https://laravel.com/docs/starter
 
 ## Quick start
 
+New here? Read **[Getting started: building a todo app](docs/getting-started.md)**, a full walkthrough from creating the project to merging your first feature.
+
 ### Step 1: Create your project (pick one)
 
 **Option A, Laravel installer** (recommended):
@@ -15,10 +17,10 @@ laravel new my-app --using=https://github.com/lmottasin/laravel-react-ai-starter
 cd my-app
 ```
 
-**Option B, GitHub template**: click **Use this template** at the top of this page, create your repository, then clone it:
+**Option B, GitHub template with `gh`** (creates your GitHub repo and clones it in one step):
 
 ```bash
-git clone https://github.com/<you>/my-app.git
+gh repo create my-app --template lmottasin/laravel-react-ai-starter-kit --private --clone
 cd my-app
 ```
 
