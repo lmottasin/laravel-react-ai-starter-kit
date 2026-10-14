@@ -21,42 +21,31 @@ cd my-app
 
 Both options give you the same project. Everything below is the same for both.
 
-### Step 2: Create the databases
-
-Create two empty PostgreSQL databases: `my_app` (the app) and `testing` (for tests). pgvector must be installed on your PostgreSQL server; you don't enable it yourself (see [PostgreSQL and pgvector](docs/postgresql-pgvector.md)).
-
-### Step 3: Point the app at your database
+### Step 2: Let Claude set it up
 
 ```bash
-cp -n .env.example .env
-```
-
-Open `.env` and check `DB_DATABASE=my_app`, `DB_USERNAME` and `DB_PASSWORD`.
-
-### Step 4: Install and set up
-
-```bash
-composer setup
-```
-
-This installs PHP and npm packages, generates the app key, runs the migrations (which also enable pgvector) and builds the frontend.
-
-### Step 5: Check everything works
-
-```bash
-npx playwright install chromium
-composer test
-```
-
-It should end with every test passing and `Total: 100.0 %`.
-
-### Step 6: Start building with Claude Code
-
-```bash
+cd my-app
 claude
 ```
 
-Inside Claude Code, type `/project-describe` and paste a description of your project. Claude then guides you through the rest of the kickoff (see [The AI workflow](#the-ai-workflow)).
+In Claude Code, run `/setup-project`. Claude creates the databases, checks pgvector, writes `.env`, installs everything and runs `composer test` until it's green.
+
+### Step 3: Plan and build
+
+Run `/kickoff` once to plan the app, then `/feature "Phase 1.1: ..."` for each feature (see [The AI workflow](#the-ai-workflow) and the [todo app walkthrough](docs/getting-started.md)).
+
+<details>
+<summary>Manual setup without Claude</summary>
+
+```bash
+# create two empty PostgreSQL databases: my_app and testing (pgvector must be installed, see docs/postgresql-pgvector.md)
+cp -n .env.example .env   # set DB_DATABASE=my_app and credentials
+composer setup
+npx playwright install chromium
+composer test             # ends with Total: 100.0 %
+```
+
+</details>
 
 ### Requirements
 
@@ -89,30 +78,19 @@ composer test   # Pint, Rector, vp check, PHPStan, tsc, type coverage, tests at 
 
 ## The AI workflow
 
-**Once per project (kickoff):**
+Agentic: three commands, and Claude runs every step in between. You only approve and decide.
 
-| Command             | Produces                                                 |
-| ------------------- | -------------------------------------------------------- |
-| `/project-describe` | `docs/project-description.md`                            |
-| `/user-stories`     | `docs/user-stories.md` (asks clarifying questions first) |
-| `/choose-packages`  | A vetted package shortlist                               |
-| `/db-schema`        | `docs/database-schema.md` (DBML)                         |
-| `/project-phases`   | `docs/project-phases.md` with the tests per task         |
+| Command                     | When                 | What Claude does                                                                                                                                                     | You                                              |
+| --------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `/setup-project`            | Once, after creating | Databases, `.env`, install, migrations, test browser, green `composer test`                                                                                          | Confirm database names                           |
+| `/kickoff`                  | Once per project     | Description, user stories, packages, DB schema (DBML), phases with tests, in `docs/`                                                                                 | Approve each document                            |
+| `/feature "Phase 2.1: ..."` | Every feature        | Branch, clarify, explore, OpenSpec spec, build, browser check per role, simplify, parallel reviews with fixes, `composer test`, archive, commit, push, PR, PR review | Approve the spec, confirm commit and push, merge |
 
-**For every feature:**
+Small fixes: just describe them; no spec needed.
 
-1. `/grill-me`: Claude interviews you with multiple-choice questions, its recommendation first.
-2. `/explore-modules`: parallel read-only agents study the code.
-3. `/opsx:propose`: an OpenSpec change you approve.
-4. `/opsx:apply`: one agent builds it, tests first.
-5. `/verify-feature`: Playwright CLI walks the feature as each role; end-to-end tests are written.
-6. `laravel-simplifier` agent tidies the code (Laravel's official plugin, enabled in `.claude/settings.json`).
-7. `code-reviewer` agent, plus `security-reviewer` for auth, permissions, payments, uploads and MCP.
-8. `/opsx:archive`, then you commit. CI runs `composer test`.
+**Other tools:** `/ralph <change>` autopilot over long task lists (only once tests are solid), `/worktree <slug>` for a parallel `/feature`, `/audit <area|all>` health checks, `/review-pr <number>`, `tech-debt` agent. The individual steps (`/grill-me`, `/explore-modules`, `/opsx:propose`, `/opsx:apply`, `/verify-feature`, `/opsx:archive`) still work on their own.
 
-**Other tools:** `/audit <area|all>` health checks, `/review-pr [number]` commander-style PR review, `/worktree <slug>` for parallel work, `/ralph <change>` autopilot loop (only once tests are solid), `tech-debt` agent.
-
-Rule of thumb: only one agent edits code at a time; extra agents read and review.
+Only one agent edits code at a time; extra agents read and review.
 
 ## Customising
 

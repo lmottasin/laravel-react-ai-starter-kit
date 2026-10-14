@@ -1,66 +1,64 @@
 # Getting started
 
-You mostly just ask Claude. This guide shows what to ask at each step, using a **todo app** (task lists, shareable as viewer or editor) as the example.
+The workflow is agentic: three commands, and Claude runs every step in between. You only make decisions (approve each kickoff document, approve each spec, confirm commits and pushes, merge).
 
-Claude asks for your confirmation before every commit and push.
+Example throughout: a **todo app** with task lists that can be shared as viewer or editor.
 
 ## 1. Create the project
 
-Either:
-
 ```bash
 laravel new todo-app --using=https://github.com/lmottasin/laravel-react-ai-starter-kit --database=pgsql
+cd todo-app && claude
 ```
 
-or **Use this template** on GitHub and clone your new repo.
+(Or **Use this template** on GitHub and clone it.) Approve the project settings and the `laravel-boost` MCP when Claude Code asks.
 
-Then open it in Claude Code: `cd todo-app && claude`. Approve the project settings and the `laravel-boost` MCP when asked.
+## 2. `/setup-project`
 
-## 2. Set up
+Claude creates the databases (`todo_app`, `testing`), checks pgvector ([details](postgresql-pgvector.md)), writes `.env`, runs `composer setup`, installs the test browser and runs `composer test` until it's green. You confirm the database names.
 
-Ask Claude:
-
-> Set up this project: create the PostgreSQL databases todo_app and testing, point .env at todo_app, run composer setup, install the Playwright browser and run composer test.
-
-It should end with every test passing and `Total: 100.0 %`. If pgvector is missing on your server, see [postgresql-pgvector.md](postgresql-pgvector.md).
-
-> Start the app.
-
-Optional, once per machine: Context7 for up-to-date library docs. Run this yourself (it holds your API key):
+Optional, once per machine (holds your API key, so run it yourself):
 
 ```bash
 claude mcp add --scope local context7 -- npx -y @upstash/context7-mcp --api-key YOUR_KEY
 ```
 
-## 3. Kickoff (once per project)
+## 3. `/kickoff`
 
-| Run                 | Output                        | Todo example                                                                                                                                                                               |
-| ------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `/project-describe` | `docs/project-description.md` | Paste: "Task lists with tasks (title, notes, due date, done). Share a list as viewer or editor. Admin sees all users."                                                                     |
-| `/user-stories`     | `docs/user-stories.md`        | Asks first, e.g. "Delete tasks with their list? 1. Yes, after confirmation (Recommended) 2. Move to Inbox". Writes stories like `US-2.1 Add a task` with criteria incl. "viewer gets 403". |
-| `/choose-packages`  | shortlist                     | May suggest nothing for a todo app.                                                                                                                                                        |
-| `/db-schema`        | `docs/database-schema.md`     | `task_lists`, `tasks` (status as `TaskStatus` Enum), `task_list_user` (access as `ListAccess` Enum).                                                                                       |
-| `/project-phases`   | `docs/project-phases.md`      | Phase 1.1 roles and permissions, Phase 2.1 create and complete tasks, Phase 2.2 share a list. Each task lists its tests.                                                                   |
+Claude runs all five planning steps and stops after each one for your approval:
 
-Review each file before running the next command. Ask for changes in plain words ("tasks need a priority too").
+| Step                | You decide                                            | Todo example                                                                                             |
+| ------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Project description | Paste your idea, approve the write-up                 | "Task lists with tasks (title, notes, due date, done). Share as viewer or editor. Admin sees all users." |
+| User stories        | Answer multiple-choice questions, approve the stories | "Delete tasks with their list? 1. Yes, after confirmation (Recommended) 2. Move to Inbox"                |
+| Packages            | Pick from a vetted shortlist                          | Possibly none for a todo app                                                                             |
+| Database schema     | Approve the DBML                                      | `task_lists`, `tasks` (`TaskStatus` Enum), `task_list_user` (`ListAccess` Enum)                          |
+| Phases              | Approve the plan                                      | 1.1 Roles and permissions, 2.1 Create and complete tasks, 2.2 Share a list                               |
 
-## 4. Build a feature
+Output lands in `docs/`. Claude commits it once you confirm.
 
-Example: Phase 2.1, create and complete tasks.
+## 4. `/feature "Phase 2.1: create and complete tasks"`
 
-| Step    | Ask Claude                                             | What happens                                                                                                                            |
-| ------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Branch  | "Start a branch for Phase 2.1."                        | Creates `feature/...` from main.                                                                                                        |
-| Clarify | `/grill-me Phase 2.1`                                  | Multiple-choice questions on what the docs don't settle, e.g. "Can editors delete tasks? 1. Yes (Recommended) 2. Owner only".           |
-| Explore | `/explore-modules add tasks to lists`                  | Parallel read-only agents report where tasks plug in and which tests cover the area.                                                    |
-| Spec    | `/opsx:propose "Phase 2.1: create and complete tasks"` | Writes `openspec/changes/<name>/`: proposal with a Don't touch list, specs, `tasks.md`. **You review and approve.**                     |
-| Build   | `/opsx:apply`                                          | Migration, models, Enum, Policy, Actions, Form Requests, controller, Resource, React page, tests.                                       |
-| Verify  | `/verify-feature`                                      | Playwright CLI checks it as owner, editor and viewer (viewer gets 403), saves screenshots, writes browser tests.                        |
-| Tidy    | "Run the laravel-simplifier agent."                    | Cleans up the new code, behaviour unchanged.                                                                                            |
-| Review  | "Run the code-reviewer agent."                         | Fresh-context review against the spec and house rules. Ask for `security-reviewer` too for auth, permissions, payments, uploads or MCP. |
-| Close   | `/opsx:archive`                                        | Records the change in `openspec/specs/` and ticks the phase item.                                                                       |
+One command, and Claude runs the whole pipeline:
 
-The controller Claude writes follows the house rules:
+| Stage     | Done by                                                                                                  | Your part                                                                                             |
+| --------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Branch    | Claude                                                                                                   |                                                                                                       |
+| Clarify   | Claude asks only what `docs/` doesn't settle                                                             | Answer multiple-choice questions, e.g. "Can editors delete tasks? 1. Yes (Recommended) 2. Owner only" |
+| Explore   | Parallel read-only agents                                                                                |                                                                                                       |
+| Spec      | OpenSpec proposal, specs and tasks with a Don't touch list                                               | **Approve the spec**                                                                                  |
+| Build     | Claude, tests first, house rules                                                                         |                                                                                                       |
+| Verify    | Playwright CLI as owner, editor and viewer, screenshots, browser tests                                   |                                                                                                       |
+| Simplify  | `laravel-simplifier` agent                                                                               |                                                                                                       |
+| Review    | `code-reviewer` and, when needed, `security-reviewer` in parallel; Claude fixes High and Medium findings |                                                                                                       |
+| Gate      | `composer test` until green (asks you after 3 failed attempts)                                           |                                                                                                       |
+| Archive   | OpenSpec change recorded, phase item ticked                                                              |                                                                                                       |
+| Ship      | Commit, push, pull request, waits for CI                                                                 | **Confirm commit and push**                                                                           |
+| PR review | Commander review of the PR, fixes High findings                                                          |                                                                                                       |
+
+You get a report with the PR link, CI status and any decisions left. **You merge.**
+
+The code follows the house rules automatically. For example:
 
 ```php
 public function store(CreateTaskRequest $request, TaskList $list, CreateTask $action): RedirectResponse
@@ -73,26 +71,22 @@ public function store(CreateTaskRequest $request, TaskList $list, CreateTask $ac
 }
 ```
 
-## 5. Ship
-
-| Ask Claude                                                          | What happens                                                                                             |
-| ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| "Run composer test, then commit and push, and open a pull request." | Full gate, commit, push and PR (you confirm the commit and push). CI runs the same checks on PostgreSQL. |
-| `/review-pr`                                                        | A commander picks only the reviewers the diff needs and returns one ranked report.                       |
-| "Fix the high findings and push."                                   | Fixes, re-runs tests, pushes.                                                                            |
-| "CI is green, merge it and switch back to main."                    | Merges and updates your local main.                                                                      |
+Then the next item: `/feature "Phase 2.2: share a list"`.
 
 ## Small fixes
 
-Skip `/grill-me` and OpenSpec. Ask directly:
+No spec needed. Just ask:
 
 > The due date shows in US format. Show it as 14 Oct 2026, test first, then commit and open a PR.
 
 ## Optional
 
-| Ask                        | Use it for                                                                                   |
-| -------------------------- | -------------------------------------------------------------------------------------------- |
-| `/worktree sharing`        | A separate copy with its own database, to build an unrelated feature in parallel.            |
-| `/ralph <change>`          | Autopilot through an approved change, one fresh session per task. Only once tests are solid. |
-| `/audit all`               | Health check at the end of each phase and before release.                                    |
-| "Run the tech-debt agent." | Debt report per milestone.                                                                   |
+| Command                    | Use it for                                                                                        |
+| -------------------------- | ------------------------------------------------------------------------------------------------- |
+| `/ralph <change>`          | Autopilot over a long, approved task list, one fresh session per task. Only once tests are solid. |
+| `/worktree <slug>`         | A separate copy with its own database, to run a second `/feature` in parallel on unrelated files. |
+| `/audit all`               | Health check at the end of each phase and before release.                                         |
+| `/review-pr <number>`      | Review any pull request, including ones written by people.                                        |
+| "Run the tech-debt agent." | Debt report per milestone.                                                                        |
+
+The individual steps (`/grill-me`, `/explore-modules`, `/opsx:propose`, `/opsx:apply`, `/verify-feature`, `/opsx:archive`) still work on their own when you want manual control.

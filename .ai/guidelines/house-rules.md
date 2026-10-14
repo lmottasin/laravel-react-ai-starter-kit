@@ -29,6 +29,6 @@ These override general Laravel habits where they differ.
 - No comments or docblocks that restate the code; only explain why.
 
 ## Workflow
-- New project: `/project-describe`, `/user-stories`, `/choose-packages`, `/db-schema`, `/project-phases` (docs/).
-- Each feature: `/grill-me`, `/explore-modules`, `/opsx:propose` (user approves), `/opsx:apply`, `/verify-feature`, laravel-simplifier agent, code-reviewer agent (plus security-reviewer for auth, permissions, payments, uploads, MCP), `/opsx:archive`. One-file fixes skip OpenSpec.
+- Agentic: `/setup-project` once, `/kickoff` once per project, then `/feature "<phase item>"` per feature. These run every step themselves and stop only for spec approval and commit/push confirmation.
+- One-file fixes skip the spec: fix test-first, run `composer test`, then commit and open a PR.
 - Only one agent edits code at a time; extra agents only read and review.
