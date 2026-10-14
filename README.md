@@ -26,7 +26,7 @@ Both options give you the same project. Everything below is the same for both.
 
 ### Step 2: Create the databases
 
-Create two empty PostgreSQL databases: `my_app` (the app) and `testing` (for tests). pgvector must be installed on your PostgreSQL server; you don't enable it yourself (see [PostgreSQL and pgvector](#postgresql-and-pgvector)).
+Create two empty PostgreSQL databases: `my_app` (the app) and `testing` (for tests). pgvector must be installed on your PostgreSQL server; you don't enable it yourself (see [PostgreSQL and pgvector](docs/postgresql-pgvector.md)).
 
 ### Step 3: Point the app at your database
 
@@ -67,27 +67,6 @@ Inside Claude Code, type `/project-describe` and paste a description of your pro
 - PostgreSQL 17 with the pgvector extension
 - Node 24 (LTS) and npm
 - [Playwright CLI](https://github.com/microsoft/playwright-cli) (`npm i -g @playwright/cli`) and [OpenSpec](https://github.com/Fission-AI/OpenSpec) (`npm i -g @fission-ai/openspec`)
-
-## PostgreSQL and pgvector
-
-pgvector is a PostgreSQL extension that stores AI embeddings and finds similar items. It needs two things:
-
-1. **Installed on your PostgreSQL server** (once per machine). Check by running this in any database:
-
-    ```sql
-    SELECT name, default_version FROM pg_available_extensions WHERE name = 'vector';
-    ```
-
-    One row means it's installed. No rows means install it:
-
-    | How you run PostgreSQL | Install pgvector                                 |
-    | ---------------------- | ------------------------------------------------ |
-    | DBngin or Postgres.app | Already included                                 |
-    | Homebrew               | `brew install pgvector`, then restart PostgreSQL |
-    | Docker                 | Use the `pgvector/pgvector:pg17` image           |
-    | Ubuntu or Debian       | `sudo apt install postgresql-17-pgvector`        |
-
-2. **Enabled in each database.** You don't do this by hand: the first migration runs `Schema::ensureVectorExtensionExists()` (`CREATE EXTENSION IF NOT EXISTS vector`). Tests run the same migrations on the test database, so it's enabled there too. The database user needs permission to create extensions; the default `postgres` user has it.
 
 ## What's included
 
