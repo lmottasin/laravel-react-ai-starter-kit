@@ -65,7 +65,7 @@ Inside Claude Code, type `/project-describe` and paste a description of your pro
 
 - PHP 8.5 with `pdo_pgsql` and `pcov` (coverage)
 - PostgreSQL 17 with the pgvector extension
-- Node 22 and npm
+- Node 24 (LTS) and npm
 - [Playwright CLI](https://github.com/microsoft/playwright-cli) (`npm i -g @playwright/cli`) and [OpenSpec](https://github.com/Fission-AI/OpenSpec) (`npm i -g @fission-ai/openspec`)
 
 ## PostgreSQL and pgvector
