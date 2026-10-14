@@ -6,19 +6,60 @@ Built on Laravel's official [React starter kit](https://laravel.com/docs/starter
 
 ## Quick start
 
+### Step 1: Create your project (pick one)
+
+**Option A, Laravel installer** (recommended):
+
 ```bash
 laravel new my-app --using=https://github.com/lmottasin/laravel-react-ai-starter-kit --database=pgsql
 cd my-app
 ```
 
-Then:
+**Option B, GitHub template**: click **Use this template** at the top of this page, create your repository, then clone it:
 
-1. Create two empty databases: `my_app` (the app) and `testing` (tests, see `phpunit.xml`). pgvector must be installed on your PostgreSQL server; the migrations enable it (see [PostgreSQL and pgvector](#postgresql-and-pgvector)).
-2. Check `.env` (`DB_*` settings), then `php artisan migrate`.
-3. `composer test` should pass.
-4. Open the project in Claude Code and start with `/project-describe`.
+```bash
+git clone https://github.com/<you>/my-app.git
+cd my-app
+```
 
-Or click **Use this template** on GitHub and run `composer setup`.
+Both options give you the same project. Everything below is the same for both.
+
+### Step 2: Create the databases
+
+Create two empty PostgreSQL databases: `my_app` (the app) and `testing` (for tests). pgvector must be installed on your PostgreSQL server; you don't enable it yourself (see [PostgreSQL and pgvector](#postgresql-and-pgvector)).
+
+### Step 3: Point the app at your database
+
+```bash
+cp -n .env.example .env
+```
+
+Open `.env` and check `DB_DATABASE=my_app`, `DB_USERNAME` and `DB_PASSWORD`.
+
+### Step 4: Install and set up
+
+```bash
+composer setup
+```
+
+This installs PHP and npm packages, generates the app key, runs the migrations (which also enable pgvector) and builds the frontend.
+
+### Step 5: Check everything works
+
+```bash
+npx playwright install chromium
+composer test
+```
+
+It should end with every test passing and `Total: 100.0 %`.
+
+### Step 6: Start building with Claude Code
+
+```bash
+claude
+```
+
+Inside Claude Code, type `/project-describe` and paste a description of your project. Claude then guides you through the rest of the kickoff (see [The AI workflow](#the-ai-workflow)).
 
 ### Requirements
 
