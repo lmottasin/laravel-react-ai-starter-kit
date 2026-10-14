@@ -5,15 +5,11 @@ declare(strict_types=1);
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
 use Illuminate\Auth\Middleware\RequirePassword;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
 Route::middleware(['auth'])->group(function (): void {
-    // Route::redirect() registers the QUERY verb, which Wayfinder's TS types don't know yet (laravel/wayfinder#326).
-    Route::get('settings', fn (): RedirectResponse => to_route('profile.edit'));
-
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
